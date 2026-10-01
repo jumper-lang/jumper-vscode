@@ -1,8 +1,8 @@
 {
-  "name": "jumper",
-  "displayName": "Jumper",
+  "name": "jumper-lang",
+  "displayName": "Jumper Language",
   "description": "Jumper language (.jmp, .jmc, .jma): highlighting, errors as you type, hover, completion, go-to-definition into Java (sources or CFR)",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "publisher": "Padej",
   "author": "Padej_",
   "license": "MIT",
