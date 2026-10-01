@@ -1,0 +1,109 @@
+{
+  "name": "jumper",
+  "displayName": "Jumper",
+  "description": "Jumper language (.jmp, .jmc, .jma): highlighting, errors as you type, hover, completion, go-to-definition into Java (sources or CFR)",
+  "version": "0.11.0",
+  "publisher": "Padej",
+  "author": "Padej_",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jumper-lang/jumper-vscode.git"
+  },
+  "homepage": "https://github.com/jumper-lang/jumper-vscode",
+  "bugs": {
+    "url": "https://github.com/jumper-lang/jumper-vscode/issues"
+  },
+  "keywords": ["jumper", "jmp", "jvm", "java", "scripting", "lsp"],
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.91.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters"
+  ],
+  "main": "./out/extension.js",
+  "jumperServer": {
+    "version": "0.11.0",
+    "sha256": "fec89991055699f69c39112e4024e7f088dd023c8f8b8560511090b1d9a31c4d"
+  },
+  "activationEvents": [],
+  "contributes": {
+    "languages": [
+      {
+        "id": "jumper",
+        "aliases": ["Jumper", "jumper"],
+        "extensions": [".jmp"],
+        "configuration": "./language-configuration.json",
+        "icon": { "light": "./icons/jmp.svg", "dark": "./icons/jmp.svg" }
+      },
+      {
+        "id": "jumper-config",
+        "aliases": ["Jumper Config"],
+        "extensions": [".jmc"],
+        "configuration": "./language-configuration.json",
+        "icon": { "light": "./icons/jmc.svg", "dark": "./icons/jmc.svg" }
+      },
+      {
+        "id": "jumper-policy",
+        "aliases": ["Jumper Access Policy"],
+        "extensions": [".jma"],
+        "configuration": "./language-configuration.json",
+        "icon": { "light": "./icons/jma.svg", "dark": "./icons/jma.svg" }
+      }
+    ],
+    "grammars": [
+      { "language": "jumper", "scopeName": "source.jumper", "path": "./syntaxes/jumper.tmLanguage.json" },
+      { "language": "jumper-config", "scopeName": "source.jumper.config", "path": "./syntaxes/jumper-config.tmLanguage.json" },
+      { "language": "jumper-policy", "scopeName": "source.jumper.policy", "path": "./syntaxes/jumper-policy.tmLanguage.json" }
+    ],
+    "configuration": {
+      "title": "Jumper",
+      "properties": {
+        "jumper.java": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "markdownDescription": "The `java` (21 or newer) to run the language server with. Empty: `JAVA_HOME`, then `java` on the `PATH`."
+        },
+        "jumper.server.jar": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "markdownDescription": "A `jmp.jar` to run instead of the one inside the extension - e.g. `lang/build/libs/jmp.jar` of a build of [the language](https://github.com/jumper-lang/jumper)."
+        },
+        "jumper.server.jvmArgs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "scope": "machine-overridable",
+          "markdownDescription": "Extra JVM arguments for the language server (`-Xmx512m`; `-Djmp.cfr=<cfr.jar>` to decompile with another CFR, `-Djmp.cfr=off` for none)."
+        }
+      }
+    },
+    "configurationDefaults": {
+      "files.readonlyInclude": { "**/jumper/sources/**": true },
+      "[jumper][jumper-config][jumper-policy]": { "editor.semanticHighlighting.enabled": true }
+    }
+  },
+  "scripts": {
+    "server": "node scripts/server.mjs",
+    "build": "npm run server && node esbuild.mjs",
+    "watch": "npm run server && node esbuild.mjs --watch",
+    "check": "tsc --noEmit",
+    "vscode:prepublish": "npm run server && npm run check && node esbuild.mjs --production",
+    "package": "vsce package --no-dependencies",
+    "publish": "vsce publish --no-dependencies"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^10.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "@types/vscode": "1.91.0",
+    "@vscode/vsce": "^3.7.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  // F5: a VS Code window with the extension from this folder (Extension Development Host).
+  // Open a folder with .jmp files in it (e.g. example/server). The server is server/jmp.jar (npm run server) or "jumper.server.jar".
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+      "outFiles": ["${workspaceFolder}/out/**/*.js"],
+      "preLaunchTask": "npm: build"
+    }
+  ]
+}

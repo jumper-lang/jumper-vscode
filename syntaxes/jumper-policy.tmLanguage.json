@@ -1,0 +1,8 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Jumper Access Policy",
+  "scopeName": "source.jumper.policy",
+  "fileTypes": ["jma"],
+  "comment": "A .jma is Jumper text: the grammar of source.jumper, under a language of its own (its icon, its name in the status bar).",
+  "patterns": [{ "include": "source.jumper" }]
+}

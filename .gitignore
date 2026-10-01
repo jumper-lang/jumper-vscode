@@ -1,0 +1,7 @@
+node_modules/
+out/
+# the language server: downloaded by npm run server (scripts/server.mjs)
+server/
+*.vsix
+# documentation stays out of git
+*.md

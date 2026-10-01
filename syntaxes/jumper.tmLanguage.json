@@ -1,0 +1,330 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Jumper",
+  "scopeName": "source.jumper",
+  "fileTypes": [
+    "jmp",
+    "jmc",
+    "jma"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#import"
+    },
+    {
+      "include": "#class"
+    },
+    {
+      "include": "#code"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.jumper",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "captures": {
+            "0": {
+              "name": "punctuation.definition.comment.jumper"
+            }
+          }
+        },
+        {
+          "name": "comment.line.double-slash.jumper",
+          "begin": "//",
+          "end": "$",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.jumper"
+            }
+          }
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.jumper",
+          "begin": "\"",
+          "end": "\"|$",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.jumper"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.jumper"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#escapes"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.jumper",
+          "begin": "'",
+          "end": "'|$",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.jumper"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.jumper"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#escapes"
+            }
+          ]
+        }
+      ]
+    },
+    "escapes": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.jumper",
+          "match": "\\\\(?:u[0-9A-Fa-f]{4}|.)"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.jumper",
+          "match": "\\b0[xX][0-9A-Fa-f]+[lL]?\\b"
+        },
+        {
+          "name": "constant.numeric.decimal.jumper",
+          "match": "\\b[0-9]+(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?[lL]?\\b"
+        }
+      ]
+    },
+    "import": {
+      "patterns": [
+        {
+          "match": "\\b(import)\\s+([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_]\\w*)*)\\s*(;)?",
+          "captures": {
+            "1": {
+              "name": "keyword.other.import.jumper"
+            },
+            "2": {
+              "name": "storage.modifier.import.jumper"
+            },
+            "3": {
+              "name": "punctuation.terminator.jumper"
+            }
+          }
+        },
+        {
+          "match": "\\b(import)\\b",
+          "name": "keyword.other.import.jumper"
+        }
+      ]
+    },
+    "class": {
+      "match": "\\b(class)\\s+([A-Za-z_][A-Za-z0-9_]*)(?:\\s+(extends)\\s+([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_]\\w*)*))?",
+      "captures": {
+        "1": {
+          "name": "storage.type.class.jumper"
+        },
+        "2": {
+          "name": "entity.name.type.class.jumper"
+        },
+        "3": {
+          "name": "storage.modifier.extends.jumper"
+        },
+        "4": {
+          "name": "entity.other.inherited-class.jumper"
+        }
+      }
+    },
+    "code": {
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "include": "#table-key"
+        },
+        {
+          "include": "#declaration"
+        },
+        {
+          "match": "\\b(new)\\s+([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_]\\w*)*)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.new.jumper"
+            },
+            "2": {
+              "name": "entity.name.type.class.jumper"
+            }
+          }
+        },
+        {
+          "name": "keyword.control.jumper",
+          "match": "\\b(?:if|else|while|for|do|break|continue|return|switch|case|default|try|catch|finally|throw)\\b"
+        },
+        {
+          "name": "storage.type.primitive.jumper",
+          "match": "\\b(?:dyn|int|long|double|boolean|void)\\b"
+        },
+        {
+          "name": "storage.modifier.jumper",
+          "match": "\\bstatic\\b"
+        },
+        {
+          "name": "storage.type.class.jumper",
+          "match": "\\bclass\\b"
+        },
+        {
+          "name": "storage.modifier.extends.jumper",
+          "match": "\\bextends\\b"
+        },
+        {
+          "name": "constant.language.jumper",
+          "match": "\\b(?:true|false|null)\\b"
+        },
+        {
+          "name": "variable.language.jumper",
+          "match": "\\b(?:this|super)\\b"
+        },
+        {
+          "match": "(\\.)\\s*([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+          "captures": {
+            "1": {
+              "name": "punctuation.separator.period.jumper"
+            },
+            "2": {
+              "name": "entity.name.function.member.jumper"
+            }
+          }
+        },
+        {
+          "match": "(\\.)\\s*([A-Z][A-Za-z0-9_]*[a-z][A-Za-z0-9_]*)\\b",
+          "captures": {
+            "1": {
+              "name": "punctuation.separator.period.jumper"
+            },
+            "2": {
+              "name": "entity.name.type.class.jumper"
+            }
+          }
+        },
+        {
+          "match": "(\\.)\\s*([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "punctuation.separator.period.jumper"
+            },
+            "2": {
+              "name": "variable.other.object.property.jumper"
+            }
+          }
+        },
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+          "captures": {
+            "1": {
+              "name": "entity.name.function.jumper"
+            }
+          }
+        },
+        {
+          "name": "entity.name.type.class.jumper",
+          "match": "\\b[A-Z][A-Za-z0-9_]*[a-z][A-Za-z0-9_]*\\b|\\b[A-Z]\\b"
+        },
+        {
+          "name": "storage.type.function.arrow.jumper",
+          "match": "->"
+        },
+        {
+          "name": "keyword.operator.jumper",
+          "match": ">>>|<<|>>|[=!<>]=|&&|\\|\\||\\+\\+|--|[-+*/%]=|[-+*/%=<>!&|^?:]"
+        },
+        {
+          "name": "punctuation.terminator.jumper",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.separator.delimiter.jumper",
+          "match": ","
+        },
+        {
+          "name": "variable.other.jumper",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b"
+        }
+      ]
+    },
+    "table-key": {
+      "match": "(?:(?<=[{,])|^)\\s*(?!(?:case|default)\\b)([A-Za-z_][A-Za-z0-9_]*)\\s*(?=:(?!:))",
+      "captures": {
+        "1": {
+          "name": "variable.other.property.key.jumper"
+        }
+      }
+    },
+    "declaration": {
+      "patterns": [
+        {
+          "match": "\\b(dyn|int|long|double|boolean|void|String|[A-Z][A-Za-z0-9_]*)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+          "captures": {
+            "1": {
+              "patterns": [
+                {
+                  "include": "#type-name"
+                }
+              ]
+            },
+            "2": {
+              "name": "entity.name.function.jumper"
+            }
+          }
+        },
+        {
+          "match": "\\b(dyn|int|long|double|boolean|void|String|[A-Z][A-Za-z0-9_]*)\\s+(?!(?:instanceof)\\b)([A-Za-z_][A-Za-z0-9_]*)\\s*(?=[=;,):]|$)",
+          "captures": {
+            "1": {
+              "patterns": [
+                {
+                  "include": "#type-name"
+                }
+              ]
+            },
+            "2": {
+              "name": "variable.other.definition.jumper"
+            }
+          }
+        }
+      ]
+    },
+    "type-name": {
+      "patterns": [
+        {
+          "name": "storage.type.primitive.jumper",
+          "match": "\\b(?:dyn|int|long|double|boolean|void)\\b"
+        },
+        {
+          "name": "entity.name.type.class.jumper",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b"
+        }
+      ]
+    }
+  }
+}

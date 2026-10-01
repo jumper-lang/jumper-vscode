@@ -1,0 +1,60 @@
+# A release: push a tag v<version> (the "version" of package.json). The extension is built with the language
+# server of package.json's "jumperServer" (a release of jumper-lang/jumper, checked against its pinned SHA-256)
+# and attached to the GitHub release; with the secret VSCE_PAT (a token of the Marketplace publisher "Padej")
+# it is published to the VS Code Marketplace as well. Every push and pull request is built and type-checked.
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Version
+        id: v
+        run: |
+          v=$(node -p "require('./package.json').version")
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          if [[ "$GITHUB_REF" == refs/tags/* && "$GITHUB_REF_NAME" != "v$v" ]]; then
+            echo "::error::tag $GITHUB_REF_NAME, but package.json says $v"
+            exit 1
+          fi
+
+      - run: npm ci
+
+      - name: Package
+        run: npx vsce package --no-dependencies -o jumper-${{ steps.v.outputs.version }}.vsix
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsix
+          path: "*.vsix"
+
+      - name: GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "*.vsix"
+          body: |
+            Install: Extensions view -> `...` -> Install from VSIX... -> `jumper-${{ steps.v.outputs.version }}.vsix`, or from the Marketplace. Needs Java 21+.
+
+      - name: Publish to the VS Code Marketplace
+        if: startsWith(github.ref, 'refs/tags/') && env.VSCE_PAT != ''
+        run: npx vsce publish --no-dependencies --packagePath jumper-${{ steps.v.outputs.version }}.vsix

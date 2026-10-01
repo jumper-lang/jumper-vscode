@@ -1,0 +1,15 @@
+# The .vsix: package.json, out/extension.js (the bundle), server/jmp.jar, the grammars, the language
+# configuration, icons/, images/icon.png, LICENSE. Everything else is the build.
+.vscode/**
+src/**
+scripts/**
+node_modules/**
+**/*.map
+**/*.ts
+esbuild.mjs
+tsconfig.json
+.gitignore
+*.vsix
+server/jmp.jar.version
+.github/**
+.gitattributes
